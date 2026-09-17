@@ -13,4 +13,9 @@ public class StudentService {
     public ArrayList<Student> getStudents() {
         return students;
     }
+
+    public Student addStudent(Student student){
+        students.add(student);
+        return student;
+    }
 }
