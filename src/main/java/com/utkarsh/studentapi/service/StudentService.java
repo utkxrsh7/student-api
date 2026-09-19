@@ -32,4 +32,15 @@ public class StudentService {
 
         return null;
     }
+
+    public String deleteStudent(int id){
+        for(Student student:students){
+            if(student.getId()==id){
+                students.remove(student);
+                return "Student deleted successfully";
+            }
+        }
+
+        return "Student not found";
+    }
 }
