@@ -4,6 +4,7 @@ import com.utkarsh.studentapi.model.Student;
 import com.utkarsh.studentapi.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,13 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteStudent(@PathVariable int id){
-        return studentService.deleteStudent(id);
+    public ResponseEntity<String> deleteStudent(@PathVariable int id){
+        String result = studentService.deleteStudent(id);
+
+        if(result.equals("Student deleted successfully")){
+            return ResponseEntity.ok(result);
+        }
+
+        return ResponseEntity.notFound().build();a
     }
 }
