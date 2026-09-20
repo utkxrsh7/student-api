@@ -24,8 +24,9 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student addStudent(@RequestBody Student student){
-        return studentService.addStudent(student);
+    public ResponseEntity<Student> addStudent(@RequestBody Student student){
+        Student newStudent = studentService.addStudent(student);
+        return ResponseEntity.status(201).body(newStudent);
     }
 
     @PutMapping("/{id}")
@@ -41,6 +42,6 @@ public class StudentController {
             return ResponseEntity.ok(result);
         }
 
-        return ResponseEntity.notFound().build();a
+        return ResponseEntity.notFound().build();
     }
 }
