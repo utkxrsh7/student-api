@@ -5,6 +5,7 @@ import com.utkarsh.studentapi.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 
@@ -43,5 +44,10 @@ public class StudentController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/search")
+    public String searchStudent(@RequestParam String name){
+        return "Searching for: " + name;
     }
 }
