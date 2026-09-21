@@ -47,7 +47,7 @@ public class StudentController {
     }
 
     @GetMapping("/search")
-    public String searchStudent(@RequestParam String name){
-        return "Searching for: " + name;
+    public ArrayList<Student> searchStudent(@RequestParam String name){
+        return studentService.searchStudent(name);
     }
 }

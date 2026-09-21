@@ -43,4 +43,16 @@ public class StudentService {
 
         return "Student not found";
     }
+
+    public ArrayList<Student> searchStudent(String name){
+        ArrayList<Student> result = new ArrayList<>();
+
+        for(Student student:students){
+            if(student.getName().equalsIgnoreCase(name)){
+                result.add(student);
+            }
+        }
+
+        return result;
+    }
 }
