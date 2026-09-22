@@ -1,5 +1,6 @@
 package com.utkarsh.studentapi.service;
 
+import com.utkarsh.studentapi.dto.StudentDTO;
 import com.utkarsh.studentapi.model.Student;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +55,24 @@ public class StudentService {
         }
 
         return result;
+    }
+
+    public StudentDTO convertToDTO(Student student){
+
+        return new StudentDTO(
+                student.getId(),
+                student.getName(),
+                student.getAge(),
+                student.getEmail()
+        );
+    }
+
+    public Student convertToStudent(StudentDTO studentDTO){
+        return new Student(
+                studentDTO.getId(),
+                studentDTO.getName(),
+                studentDTO.getAge(),
+                studentDTO.getEmail()
+        );
     }
 }
