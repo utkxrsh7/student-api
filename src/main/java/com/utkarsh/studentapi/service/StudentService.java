@@ -57,6 +57,7 @@ public class StudentService {
         return result;
     }
 
+    // Convert Student model to StudentDTO for API response
     public StudentDTO convertToDTO(Student student){
 
         return new StudentDTO(
