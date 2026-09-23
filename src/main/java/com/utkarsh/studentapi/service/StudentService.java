@@ -1,8 +1,10 @@
 package com.utkarsh.studentapi.service;
 
 import com.utkarsh.studentapi.dto.StudentDTO;
+import com.utkarsh.studentapi.exception.StudentNotFoundException;
 import com.utkarsh.studentapi.model.Student;
 import org.springframework.stereotype.Service;
+import com.utkarsh.studentapi.exception.StudentNotFoundException;
 
 import java.util.ArrayList;
 
@@ -31,7 +33,7 @@ public class StudentService {
             }
         }
 
-        return null;
+        throw new StudentNotFoundException("Student not found with id: " + id);
     }
 
     public String deleteStudent(int id){
