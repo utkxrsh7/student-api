@@ -44,7 +44,7 @@ public class StudentService {
             }
         }
 
-        return "Student not found";
+        throw new StudentNotFoundException("Student not found with id: " + id);
     }
 
     public ArrayList<Student> searchStudent(String name){

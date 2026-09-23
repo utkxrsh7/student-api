@@ -39,11 +39,7 @@ public class StudentController {
     public ResponseEntity<String> deleteStudent(@PathVariable int id){
         String result = studentService.deleteStudent(id);
 
-        if(result.equals("Student deleted successfully")){
-            return ResponseEntity.ok(result);
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/search")
