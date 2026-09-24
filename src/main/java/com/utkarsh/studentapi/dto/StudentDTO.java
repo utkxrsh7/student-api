@@ -1,8 +1,13 @@
 package com.utkarsh.studentapi.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+
 public class StudentDTO {
     private int id;
+    @NotBlank
     private String name;
+    @Min(1)
     private int age;
     private String email;
 

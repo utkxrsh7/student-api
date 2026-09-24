@@ -17,9 +17,10 @@ public class StudentService {
         return students;
     }
 
-    public Student addStudent(Student student){
+    public StudentDTO addStudent(StudentDTO studentDTO){
+        Student student = convertToStudent(studentDTO);
         students.add(student);
-        return student;
+        return convertToDTO(student);
     }
 
     public Student updateStudent(int id,Student updatedStudent){
