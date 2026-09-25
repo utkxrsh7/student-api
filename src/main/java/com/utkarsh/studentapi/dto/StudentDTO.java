@@ -3,8 +3,10 @@ package com.utkarsh.studentapi.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Positive;
 
 public class StudentDTO {
+    @Positive
     private int id;
     @NotBlank
     private String name;
