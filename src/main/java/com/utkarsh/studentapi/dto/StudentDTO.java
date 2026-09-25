@@ -2,6 +2,7 @@ package com.utkarsh.studentapi.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
 
 public class StudentDTO {
     private int id;
@@ -9,6 +10,7 @@ public class StudentDTO {
     private String name;
     @Min(1)
     private int age;
+    @Email
     private String email;
 
     public StudentDTO(){
