@@ -14,6 +14,7 @@ public class StudentDTO {
     private String name;
     @Min(1)
     private int age;
+    @NotBlank
     @Email
     private String email;
 
