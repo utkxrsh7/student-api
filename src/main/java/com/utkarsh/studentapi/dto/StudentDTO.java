@@ -13,7 +13,7 @@ public class StudentDTO {
     @NotBlank
     @Size(min=2,max=50)
     private String name;
-    @Min(1)
+    @Min(10)
     @Max(100)
     private int age;
     @NotBlank
