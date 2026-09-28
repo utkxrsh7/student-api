@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
 
 public class StudentDTO {
     @Positive
@@ -13,6 +14,7 @@ public class StudentDTO {
     @Size(min=2,max=50)
     private String name;
     @Min(1)
+    @Max(100)
     private int age;
     @NotBlank
     @Email
