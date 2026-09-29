@@ -9,9 +9,10 @@ import jakarta.validation.constraints.Max;
 
 public class StudentDTO {
     @Positive
+    @Max(9999)
     private int id;
     @NotBlank
-    @Size(min=2,max=50)
+    @Size(min=2,max=30)
     private String name;
     @Min(10)
     @Max(100)
