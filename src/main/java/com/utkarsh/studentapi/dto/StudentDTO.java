@@ -16,6 +16,7 @@ public class StudentDTO {
     @Min(10)
     @Max(100)
     private int age;
+    @Size(max=100)
     @NotBlank
     @Email
     private String email;
