@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Pattern;
 
 public class StudentDTO {
     @Positive
@@ -20,6 +21,7 @@ public class StudentDTO {
     @Size(max=100)
     @NotBlank
     @Email
+    @Pattern(regexp = "^[a-zA-Z ]+$", message = "Name must contain only letters")
     private String email;
 
     public StudentDTO(){
