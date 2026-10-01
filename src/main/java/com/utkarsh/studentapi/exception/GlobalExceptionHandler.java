@@ -14,6 +14,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidation(MethodArgumentNotValidException exception){
-        return ResponseEntity.badRequest().body("Invalid student data");
+
+        String error = exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+        return ResponseEntity.badRequest().body(error);
     }
 }
