@@ -14,14 +14,14 @@ public class StudentDTO {
     private int id;
     @NotBlank
     @Size(min=2,max=30)
+    @Pattern(regexp = "^[a-zA-Z ]+$", message = "Name must contain only letters")
     private String name;
-    @Min(10)
+    @Min(18)
     @Max(100)
     private int age;
     @Size(max=100)
     @NotBlank
     @Email
-    @Pattern(regexp = "^[a-zA-Z ]+$", message = "Name must contain only letters")
     private String email;
 
     public StudentDTO(){
