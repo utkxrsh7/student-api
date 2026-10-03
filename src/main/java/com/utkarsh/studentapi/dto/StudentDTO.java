@@ -22,6 +22,10 @@ public class StudentDTO {
     @Size(max=100)
     @NotBlank
     @Email
+    @Pattern(
+            regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.com$",
+            message = "Email must end with .com"
+    )
     private String email;
 
     public StudentDTO(){
