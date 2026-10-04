@@ -62,7 +62,7 @@ public class StudentService {
         ArrayList<Student> result = new ArrayList<>();
 
         for(Student student:students){
-            if(student.getName().equalsIgnoreCase(name)){
+            if(student.getName().toLowerCase().contains(name.toLowerCase())){
                 result.add(student);
             }
         }
