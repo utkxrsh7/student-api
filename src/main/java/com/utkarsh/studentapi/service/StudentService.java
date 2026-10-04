@@ -17,6 +17,16 @@ public class StudentService {
         return students;
     }
 
+    public StudentDTO getStudentById(int id){
+        for(Student student:students){
+            if(student.getId()==id){
+                return convertToDTO(student);
+            }
+        }
+
+        throw new StudentNotFoundException("Student not found with id: "+id);
+    }
+
     public StudentDTO addStudent(StudentDTO studentDTO){
         Student student = convertToStudent(studentDTO);
         students.add(student);
