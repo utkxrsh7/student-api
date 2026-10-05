@@ -89,4 +89,16 @@ public class StudentService {
                 studentDTO.getEmail()
         );
     }
+
+    public ArrayList<Student> searchByAge(int age){
+        ArrayList<Student> result = new ArrayList<>();
+
+        for(Student student:students){
+            if(student.getAge()==age){
+                result.add(student);
+            }
+        }
+
+        return result;
+    }
 }
