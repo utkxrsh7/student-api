@@ -101,4 +101,14 @@ public class StudentService {
 
         return result;
     }
+
+    public Student findByEmail(String email){
+        for(Student student:students){
+            if(student.getEmail().equalsIgnoreCase(email)){
+                return student;
+            }
+        }
+
+        throw new StudentNotFoundException("Student not found");
+    }
 }

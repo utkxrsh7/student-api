@@ -59,4 +59,9 @@ public class StudentController {
     public ArrayList<Student> searchByAge(@RequestParam int age){
         return studentService.searchByAge(age);
     }
+
+    @GetMapping("/search/email")
+    public Student findByEmail(@RequestParam String email){
+        return studentService.findByEmail(email);
+    }
 }
