@@ -64,4 +64,9 @@ public class StudentController {
     public Student findByEmail(@RequestParam String email){
         return studentService.findByEmail(email);
     }
+
+    @GetMapping("/count")
+    public int getStudentCount(){
+        return studentService.getStudentCount();
+    }
 }

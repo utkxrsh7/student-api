@@ -111,4 +111,8 @@ public class StudentService {
 
         throw new StudentNotFoundException("Student not found");
     }
+
+    public int getStudentCount(){
+        return students.size();
+    }
 }
