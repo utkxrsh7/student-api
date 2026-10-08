@@ -69,4 +69,9 @@ public class StudentController {
     public int getStudentCount(){
         return studentService.getStudentCount();
     }
+
+    @GetMapping("/search/age-range")
+    public ArrayList<Student> getStudentsByAgeRange(@RequestParam("min") int min,@RequestParam("max") int max){
+        return studentService.getStudentsByAgeRange(min, max);
+    }
 }

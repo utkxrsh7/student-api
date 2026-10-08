@@ -115,4 +115,16 @@ public class StudentService {
     public int getStudentCount(){
         return students.size();
     }
+
+    public ArrayList<Student> getStudentsByAgeRange(int min,int max){
+        ArrayList<Student> result = new ArrayList<>();
+
+        for(Student student:students){
+            if(student.getAge() >= min && student.getAge() <= max){
+                result.add(student);
+            }
+        }
+
+        return result;
+    }
 }
