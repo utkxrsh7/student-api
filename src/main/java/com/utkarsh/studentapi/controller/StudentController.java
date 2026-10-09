@@ -74,4 +74,9 @@ public class StudentController {
     public ArrayList<Student> getStudentsByAgeRange(@RequestParam("min") int min,@RequestParam("max") int max){
         return studentService.getStudentsByAgeRange(min, max);
     }
+
+    @GetMapping("/sort/age")
+    public ArrayList<Student> sortStudentsByAge(){
+        return studentService.sortStudentsByAge();
+    }
 }

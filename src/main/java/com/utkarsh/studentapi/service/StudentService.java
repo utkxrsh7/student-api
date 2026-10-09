@@ -5,6 +5,7 @@ import com.utkarsh.studentapi.exception.StudentNotFoundException;
 import com.utkarsh.studentapi.model.Student;
 import org.springframework.stereotype.Service;
 import com.utkarsh.studentapi.exception.StudentNotFoundException;
+import java.util.Comparator;
 
 import java.util.ArrayList;
 
@@ -125,6 +126,12 @@ public class StudentService {
             }
         }
 
+        return result;
+    }
+
+    public ArrayList<Student> sortStudentsByAge(){
+        ArrayList<Student> result = new ArrayList<>(students);
+        result.sort(Comparator.comparingInt(Student::getAge));
         return result;
     }
 }
