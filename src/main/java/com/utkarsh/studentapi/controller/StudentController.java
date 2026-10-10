@@ -79,4 +79,9 @@ public class StudentController {
     public ArrayList<Student> sortStudentsByAge(){
         return studentService.sortStudentsByAge();
     }
+
+    @GetMapping("/search/keyword")
+    public ArrayList<Student> searchByKeyword(@RequestParam String keyword){
+        return studentService.searchByKeyword(keyword);
+    }
 }

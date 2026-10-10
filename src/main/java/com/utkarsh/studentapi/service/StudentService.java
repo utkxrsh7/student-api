@@ -134,4 +134,16 @@ public class StudentService {
         result.sort(Comparator.comparingInt(Student::getAge));
         return result;
     }
+
+    public ArrayList<Student> searchByKeyword(String keyword){
+        ArrayList<Student> result = new ArrayList<>();
+
+        for(Student student:students){
+            if(student.getName().toLowerCase().contains(keyword.toLowerCase())){
+                result.add(student);
+            }
+        }
+
+        return result;
+    }
 }
