@@ -146,4 +146,11 @@ public class StudentService {
 
         return result;
     }
+
+    public ArrayList<Student> sortStudentsByName(){
+        ArrayList<Student> result = new ArrayList<>(students);
+        result.sort(Comparator.comparing(Student::getName,String.CASE_INSENSITIVE_ORDER));
+
+        return result;
+    }
 }
