@@ -1,7 +1,6 @@
 package com.utkarsh.studentapi.controller;
 
 import com.utkarsh.studentapi.dto.StudentDTO;
-import com.utkarsh.studentapi.model.Student;
 import com.utkarsh.studentapi.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +21,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public ArrayList<Student> getStudents(){
+    public ArrayList<StudentDTO> getStudents(){
         return studentService.getStudents();
     }
 
@@ -39,29 +38,29 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public Student updateStudent(@PathVariable int id,@RequestBody Student student){
-        return studentService.updateStudent(id,student);
+    public ResponseEntity<StudentDTO> updateStudent(@PathVariable int id,@Valid @RequestBody StudentDTO studentDTO){
+
+        StudentDTO updated = studentService.updateStudent(id, studentDTO);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteStudent(@PathVariable int id){
-        String result = studentService.deleteStudent(id);
-
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(studentService.deleteStudent(id));
     }
 
     @GetMapping("/search")
-    public ArrayList<Student> searchStudent(@RequestParam String name){
+    public ArrayList<StudentDTO> searchStudent(@RequestParam String name){
         return studentService.searchStudent(name);
     }
 
     @GetMapping("/search/age")
-    public ArrayList<Student> searchByAge(@RequestParam int age){
+    public ArrayList<StudentDTO> searchByAge(@RequestParam int age){
         return studentService.searchByAge(age);
     }
 
     @GetMapping("/search/email")
-    public Student findByEmail(@RequestParam String email){
+    public StudentDTO findByEmail(@RequestParam String email){
         return studentService.findByEmail(email);
     }
 
@@ -71,22 +70,22 @@ public class StudentController {
     }
 
     @GetMapping("/search/age-range")
-    public ArrayList<Student> getStudentsByAgeRange(@RequestParam("min") int min,@RequestParam("max") int max){
+    public ArrayList<StudentDTO> getStudentsByAgeRange(@RequestParam("min") int min,@RequestParam("max") int max){
         return studentService.getStudentsByAgeRange(min, max);
     }
 
     @GetMapping("/sort/age")
-    public ArrayList<Student> sortStudentsByAge(){
+    public ArrayList<StudentDTO> sortStudentsByAge(){
         return studentService.sortStudentsByAge();
     }
 
     @GetMapping("/search/keyword")
-    public ArrayList<Student> searchByKeyword(@RequestParam String keyword){
+    public ArrayList<StudentDTO> searchByKeyword(@RequestParam String keyword){
         return studentService.searchByKeyword(keyword);
     }
 
     @GetMapping("/sort/name")
-    public ArrayList<Student> sortStudentsByName(){
+    public ArrayList<StudentDTO> sortStudentsByName(){
         return studentService.sortStudentsByName();
     }
 }

@@ -4,18 +4,17 @@ import com.utkarsh.studentapi.dto.StudentDTO;
 import com.utkarsh.studentapi.exception.StudentNotFoundException;
 import com.utkarsh.studentapi.model.Student;
 import org.springframework.stereotype.Service;
-import com.utkarsh.studentapi.exception.StudentNotFoundException;
 import java.util.Comparator;
-
 import java.util.ArrayList;
+import java.util.Iterator;
 
 @Service
 public class StudentService {
 
-    private ArrayList<Student> students = new ArrayList<>();
+    private final ArrayList<Student> students = new ArrayList<>();
 
-    public ArrayList<Student> getStudents() {
-        return students;
+    public ArrayList<StudentDTO> getStudents() {
+        return convertList(students);
     }
 
     public StudentDTO getStudentById(int id){
@@ -34,14 +33,14 @@ public class StudentService {
         return convertToDTO(student);
     }
 
-    public Student updateStudent(int id,Student updatedStudent){
+    public StudentDTO updateStudent(int id,StudentDTO updatedDTO){
         for(Student student:students){
             if(student.getId()==id){
-                student.setName(updatedStudent.getName());
-                student.setAge(updatedStudent.getAge());
-                student.setEmail(updatedStudent.getEmail());
+                student.setName(updatedDTO.getName());
+                student.setAge(updatedDTO.getAge());
+                student.setEmail(updatedDTO.getEmail());
 
-                return student;
+                return convertToDTO(student);
             }
         }
 
@@ -49,17 +48,21 @@ public class StudentService {
     }
 
     public String deleteStudent(int id){
-        for(Student student:students){
+        Iterator<Student> iterator = students.iterator();
+
+        while(iterator.hasNext()){
+            Student student = iterator.next();
+
             if(student.getId()==id){
-                students.remove(student);
-                return "Student deleted successfully";
+                iterator.remove();
+                return  "Student deleted successfully";
             }
         }
 
         throw new StudentNotFoundException("Student not found with id: " + id);
     }
 
-    public ArrayList<Student> searchStudent(String name){
+    public ArrayList<StudentDTO> searchStudent(String name){
         ArrayList<Student> result = new ArrayList<>();
 
         for(Student student:students){
@@ -68,30 +71,10 @@ public class StudentService {
             }
         }
 
-        return result;
+        return convertList(result);
     }
 
-    // Convert Student model to StudentDTO for API response
-    public StudentDTO convertToDTO(Student student){
-
-        return new StudentDTO(
-                student.getId(),
-                student.getName(),
-                student.getAge(),
-                student.getEmail()
-        );
-    }
-
-    public Student convertToStudent(StudentDTO studentDTO){
-        return new Student(
-                studentDTO.getId(),
-                studentDTO.getName(),
-                studentDTO.getAge(),
-                studentDTO.getEmail()
-        );
-    }
-
-    public ArrayList<Student> searchByAge(int age){
+    public ArrayList<StudentDTO> searchByAge(int age){
         ArrayList<Student> result = new ArrayList<>();
 
         for(Student student:students){
@@ -100,13 +83,13 @@ public class StudentService {
             }
         }
 
-        return result;
+        return convertList(result);
     }
 
-    public Student findByEmail(String email){
+    public StudentDTO findByEmail(String email){
         for(Student student:students){
             if(student.getEmail().equalsIgnoreCase(email)){
-                return student;
+                return convertToDTO(student);
             }
         }
 
@@ -117,7 +100,7 @@ public class StudentService {
         return students.size();
     }
 
-    public ArrayList<Student> getStudentsByAgeRange(int min,int max){
+    public ArrayList<StudentDTO> getStudentsByAgeRange(int min,int max){
         ArrayList<Student> result = new ArrayList<>();
 
         for(Student student:students){
@@ -126,16 +109,16 @@ public class StudentService {
             }
         }
 
-        return result;
+        return convertList(result);
     }
 
-    public ArrayList<Student> sortStudentsByAge(){
+    public ArrayList<StudentDTO> sortStudentsByAge(){
         ArrayList<Student> result = new ArrayList<>(students);
         result.sort(Comparator.comparingInt(Student::getAge));
-        return result;
+        return convertList(result);
     }
 
-    public ArrayList<Student> searchByKeyword(String keyword){
+    public ArrayList<StudentDTO> searchByKeyword(String keyword){
         ArrayList<Student> result = new ArrayList<>();
 
         for(Student student:students){
@@ -144,12 +127,43 @@ public class StudentService {
             }
         }
 
-        return result;
+        return convertList(result);
     }
 
-    public ArrayList<Student> sortStudentsByName(){
+    public ArrayList<StudentDTO> sortStudentsByName(){
         ArrayList<Student> result = new ArrayList<>(students);
         result.sort(Comparator.comparing(Student::getName,String.CASE_INSENSITIVE_ORDER));
+
+        return convertList(result);
+    }
+
+    // Convert one internal model to the API response DTO.
+    public StudentDTO convertToDTO(Student student){
+
+        return new StudentDTO(
+                student.getId(),
+                student.getName(),
+                student.getAge(),
+                student.getEmail()
+        );
+    }
+
+    // Convert incoming request DTO to the internal model.
+    public Student convertToStudent(StudentDTO studentDTO){
+        return new Student(
+                studentDTO.getId(),
+                studentDTO.getName(),
+                studentDTO.getAge(),
+                studentDTO.getEmail()
+        );
+    }
+
+    // Convert a list of models into a list of response DTOs.
+    private ArrayList<StudentDTO> convertList(ArrayList<Student> source){
+        ArrayList<StudentDTO> result = new ArrayList<>();
+        for(Student student:source){
+            result.add(convertToDTO(student));
+        }
 
         return result;
     }
