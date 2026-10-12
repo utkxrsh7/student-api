@@ -107,6 +107,9 @@ public class StudentService {
     }
 
     public ArrayList<StudentDTO> getStudentsByAgeRange(int min,int max){
+        if(min > max){
+            throw new IllegalArgumentException("Minimum age cannot exceed maximum age");
+        }
         ArrayList<Student> result = new ArrayList<>();
 
         for(Student student:students){

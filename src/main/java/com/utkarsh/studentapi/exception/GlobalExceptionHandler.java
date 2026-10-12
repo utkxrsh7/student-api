@@ -24,4 +24,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleDuplicateStudent(DuplicateStudentException exception){
         return ResponseEntity.status(409).body(exception.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException exception){
+        return ResponseEntity.badRequest().body(exception.getMessage());
+    }
 }
