@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.Iterator;
+import com.utkarsh.studentapi.exception.DuplicateStudentException;
 
 @Service
 public class StudentService {
@@ -28,6 +29,11 @@ public class StudentService {
     }
 
     public StudentDTO addStudent(StudentDTO studentDTO){
+        for(Student existing:students){
+            if(existing.getId()==studentDTO.getId()){
+                throw new DuplicateStudentException("Student already exists with id: "+ studentDTO.getId());
+            }
+        }
         Student student = convertToStudent(studentDTO);
         students.add(student);
         return convertToDTO(student);
