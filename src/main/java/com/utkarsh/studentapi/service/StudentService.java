@@ -177,19 +177,4 @@ public class StudentService {
         return result;
     }
 
-    // we
-    //will
-    // come
-
-
-    // back
-
-
-
-    //here
-
-    // very soon
-
-    // and will start from right heree
-    // so it's ver y important to be consistent
 }
