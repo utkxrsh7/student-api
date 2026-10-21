@@ -14,6 +14,7 @@
             background: #f4f7fb;
             color: #172033;
             font: 16px Arial, sans-serif;
+            transition: background .25s ease, color .25s ease;
         }
 
         header {
@@ -24,6 +25,25 @@
 
         header h1 { margin: 0 0 8px; }
         header p { margin: 0; color: #cbd5e1; }
+
+        /* Dark mode header layout */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .theme-toggle {
+            width: auto;
+            min-width: 135px;
+            padding: 10px 16px;
+            background: #334155;
+            border: 1px solid #64748b;
+        }
+
+        .theme-toggle:hover { background: #475569; }
 
         main {
             max-width: 1150px;
@@ -42,6 +62,7 @@
             padding: 22px;
             border-radius: 14px;
             box-shadow: 0 4px 18px #1725540c;
+            transition: background .25s ease, color .25s ease;
         }
 
         h2 { font-size: 19px; margin-top: 0; }
@@ -54,7 +75,10 @@
             font-size: 15px;
         }
 
-        input { border: 1px solid #cbd5e1; }
+        input {
+            border: 1px solid #cbd5e1;
+            transition: background .25s ease, color .25s ease;
+        }
 
         button {
             border: 0;
@@ -119,6 +143,8 @@
             border-radius: 12px;
             padding: 17px;
             background: #fff;
+            transition: background .25s ease, color .25s ease,
+            border-color .25s ease;
         }
 
         .student-card h3 {
@@ -173,18 +199,109 @@
 
         small { color: #64748b; }
 
+        /* =========================
+           DARK MODE STYLES
+           ========================= */
+
+        body.dark-mode {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode header {
+            background: #020617;
+        }
+
+        body.dark-mode section,
+        body.dark-mode .student-card {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-color: #334155;
+        }
+
+        body.dark-mode input {
+            background: #0f172a;
+            color: #f8fafc;
+            border-color: #475569;
+        }
+
+        body.dark-mode input::placeholder {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .student-card p,
+        body.dark-mode .empty {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .student-id {
+            background: #1e3a8a;
+            color: #dbeafe;
+        }
+
+        body.dark-mode #status {
+            background: #1e293b;
+            color: #bfdbfe;
+        }
+
+        body.dark-mode #status.success {
+            background: #14532d;
+            color: #dcfce7;
+        }
+
+        body.dark-mode #status.error {
+            background: #7f1d1d;
+            color: #fee2e2;
+        }
+
+        body.dark-mode #status.loading {
+            background: #78350f;
+            color: #fef3c7;
+        }
+
+        body.dark-mode details {
+            border-color: #334155;
+        }
+
+        body.dark-mode summary {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode #output {
+            background: #020617;
+            color: #d1fae5;
+        }
+
         @media (max-width: 600px) {
             header { padding: 24px 18px; }
             main { margin: 16px auto; padding: 0 12px; }
             section { padding: 17px; }
+
+            .header-row {
+                align-items: flex-start;
+            }
+
+            .theme-toggle {
+                width: auto;
+            }
         }
     </style>
 </head>
 
 <body>
 <header>
-    <h1>Student Management System</h1>
-    <p>Manage, search, update and organize student records.</p>
+    <div class="header-row">
+        <div>
+            <h1>Student Management System</h1>
+            <p>Manage, search, update and organize student records.</p>
+        </div>
+
+        <button id="themeToggle"
+                class="theme-toggle"
+                onclick="toggleTheme()">
+            🌙 Dark Mode
+        </button>
+    </div>
 </header>
 
 <main>
@@ -255,6 +372,41 @@
     const statusBox = document.getElementById("status");
     const results = document.getElementById("results");
     const resultsSection = document.getElementById("resultsSection");
+
+    // =========================
+    // PERSISTENT DARK MODE
+    // =========================
+
+    function applyTheme(isDark) {
+        document.body.classList.toggle("dark-mode", isDark);
+
+        const themeToggle = document.getElementById("themeToggle");
+
+        themeToggle.textContent = isDark
+            ? "☀️ Light Mode"
+            : "🌙 Dark Mode";
+
+        themeToggle.setAttribute(
+            "aria-pressed",
+            String(isDark)
+        );
+    }
+
+    function toggleTheme() {
+        const isDark =
+            !document.body.classList.contains("dark-mode");
+
+        localStorage.setItem(
+            "studentAppDarkMode",
+            String(isDark)
+        );
+
+        applyTheme(isDark);
+    }
+
+    // Restore the saved theme when the page opens.
+    const savedTheme = localStorage.getItem("studentAppDarkMode");
+    applyTheme(savedTheme === "true");
 
     function showStatus(message, type = "") {
         statusBox.textContent = message;
@@ -373,6 +525,7 @@
         } catch (error) {
             showStatus("❌ Request failed: " + error.message, "error");
             output.textContent = error.message;
+
             resultsSection.scrollIntoView({
                 behavior: "smooth",
                 block: "start"
@@ -400,6 +553,7 @@
 
     function addStudent() {
         const student = formStudent();
+
         if (validForm(student)) {
             request("", {
                 method: "POST",
