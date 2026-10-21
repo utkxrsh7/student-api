@@ -89,16 +89,4 @@ public class StudentController {
         return studentService.sortStudentsByName();
     }
 
-    // will
-    // start
-
-    // today now
-
-    // will come back soon
-    // stay tuned
-    // for further updates
-
-    // so here is the
-    // no issues
-
 }
