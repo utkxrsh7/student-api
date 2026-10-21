@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <style>
+        *{box-sizing:border-box}
+        body{margin:0;background:#f4f7fb;color:#172033;font:16px Arial,sans-serif}
+        header{background:#172554;color:white;padding:28px 7%}
+        header h1{margin:0 0 8px}
+        header p{margin:0;color:#cbd5e1}
+        main{max-width:1100px;margin:28px auto;padding:0 18px}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+        section{background:white;padding:22px;border-radius:14px;box-shadow:0 4px 18px #1725540c}
+        h2{font-size:19px;margin-top:0}
+        input,button{width:100%;padding:11px;margin:5px 0;border-radius:8px;font-size:15px}
+        input{border:1px solid #cbd5e1}
+        button{border:0;background:#2563eb;color:white;font-weight:bold;cursor:pointer}
+        button:hover{background:#1d4ed8}
+        .secondary{background:#475569}
+        #output{white-space:pre-wrap;overflow-wrap:anywhere;background:#0f172a;color:#d1fae5;padding:18px;border-radius:10px;min-height:100px}
+        small{color:#64748b}
+    </style>
+</head>
+<body>
+<header>
+    <h1>Student Management System</h1>
+    <p>Manage, search, update and organize student records.</p>
+</header>
+
+<main>
+    <div class="grid">
+        <section>
+            <h2>Add Student</h2>
+            <input id="id" type="number" placeholder="Student ID">
+            <input id="name" placeholder="Full name">
+            <input id="age" type="number" placeholder="Age">
+            <input id="email" type="email" placeholder="Email">
+            <button onclick="addStudent()">Add Student</button>
+        </section>
+
+        <section>
+            <h2>Find / Update / Delete</h2>
+            <input id="lookupId" type="number" placeholder="Student ID">
+            <button onclick="byId()" class="secondary">Find Student</button>
+            <button onclick="updateStudent()">Update Using Form Above</button>
+            <button onclick="deleteStudent()" class="secondary">Delete Student</button>
+            <button onclick="loadStudents()">View All Students</button>
+        </section>
+
+        <section>
+            <h2>Search Students</h2>
+            <input id="searchName" placeholder="Name contains...">
+            <button onclick="searchName()">Search by Name</button>
+            <input id="searchAge" type="number" placeholder="Exact age">
+            <button onclick="searchAge()">Search by Age</button>
+            <input id="searchEmail" type="email" placeholder="Exact email">
+            <button onclick="searchEmail()">Find by Email</button>
+            <input id="keyword" placeholder="Name keyword">
+            <button onclick="keywordSearch()">Search Keyword</button>
+        </section>
+
+        <section>
+            <h2>Age Range & Sorting</h2>
+            <input id="minAge" type="number" placeholder="Minimum age">
+            <input id="maxAge" type="number" placeholder="Maximum age">
+            <button onclick="ageRange()">Filter Age Range</button>
+            <button onclick="sortAge()" class="secondary">Sort by Age</button>
+            <button onclick="sortName()" class="secondary">Sort by Name</button>
+            <button onclick="countStudents()">Count Students</button>
+        </section>
+    </div>
+
+    <section style="margin-top:18px">
+        <h2>API Response</h2>
+        <small>Results and errors from the live backend appear below.</small>
+        <pre id="output">Loading student records...</pre>
+    </section>
+</main>
+
+<script>
+    const api = "/students";
+    const output = document.getElementById("output");
+
+    async function request(path, options = {}) {
+        output.textContent = "Loading...";
+        try {
+            const response = await fetch(api + path, {
+                ...options,
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(options.headers || {})
+                }
+            });
+            const text = await response.text();
+            let result = text;
+            try { result = text ? JSON.parse(text) : "Success"; } catch {}
+            output.textContent = "HTTP " + response.status + "\n\n" +
+                (typeof result === "string" ? result :
+                    JSON.stringify(result, null, 2));
+        } catch (error) {
+            output.textContent = "Request failed: " + error.message;
+        }
+    }
+
+    function formStudent() {
+        return {
+            id: Number(document.getElementById("id").value),
+            name: document.getElementById("name").value.trim(),
+            age: Number(document.getElementById("age").value),
+            email: document.getElementById("email").value.trim()
+        };
+    }
+
+    function validForm(s) {
+        if (!s.id || !s.name || !s.age || !s.email) {
+            output.textContent = "Please fill in all four student fields.";
+            return false;
+        }
+        return true;
+    }
+
+    function addStudent() {
+        const s = formStudent();
+        if (validForm(s))
+            request("", {method:"POST", body:JSON.stringify(s)});
+    }
+
+    function byId() {
+        const id = document.getElementById("lookupId").value;
+        if (id) request("/" + encodeURIComponent(id));
+    }
+
+    function updateStudent() {
+        const id = document.getElementById("lookupId").value;
+        const s = formStudent();
+        if (!id) {
+            output.textContent = "Enter the ID to update.";
+            return;
+        }
+        if (validForm(s))
+            request("/" + encodeURIComponent(id),
+                {method:"PUT", body:JSON.stringify(s)});
+    }
+
+    function deleteStudent() {
+        const id = document.getElementById("lookupId").value;
+        if (id && confirm("Delete student " + id + "?"))
+            request("/" + encodeURIComponent(id), {method:"DELETE"});
+    }
+
+    function loadStudents() { request(""); }
+
+    function searchName() {
+        const v = document.getElementById("searchName").value.trim();
+        if (v) request("/search?name=" + encodeURIComponent(v));
+    }
+
+    function searchAge() {
+        const v = document.getElementById("searchAge").value;
+        if (v !== "") request("/search/age?age=" + encodeURIComponent(v));
+    }
+
+    function searchEmail() {
+        const v = document.getElementById("searchEmail").value.trim();
+        if (v) request("/search/email?email=" + encodeURIComponent(v));
+    }
+
+    function keywordSearch() {
+        const v = document.getElementById("keyword").value.trim();
+        if (v) request("/search/keyword?keyword=" + encodeURIComponent(v));
+    }
+
+    function ageRange() {
+        const min = document.getElementById("minAge").value;
+        const max = document.getElementById("maxAge").value;
+        if (min === "" || max === "" || Number(min) > Number(max)) {
+            output.textContent = "Enter a valid minimum and maximum age.";
+            return;
+        }
+        request("/search/age-range?min=" + encodeURIComponent(min) +
+            "&max=" + encodeURIComponent(max));
+    }
+
+    function sortAge() { request("/sort/age"); }
+    function sortName() { request("/sort/name"); }
+    function countStudents() { request("/count"); }
+
+    loadStudents();
+</script>
+</body>
+</html>
