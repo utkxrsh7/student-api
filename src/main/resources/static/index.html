@@ -5,25 +5,182 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Management System</title>
+
     <style>
-        *{box-sizing:border-box}
-        body{margin:0;background:#f4f7fb;color:#172033;font:16px Arial,sans-serif}
-        header{background:#172554;color:white;padding:28px 7%}
-        header h1{margin:0 0 8px}
-        header p{margin:0;color:#cbd5e1}
-        main{max-width:1100px;margin:28px auto;padding:0 18px}
-        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
-        section{background:white;padding:22px;border-radius:14px;box-shadow:0 4px 18px #1725540c}
-        h2{font-size:19px;margin-top:0}
-        input,button{width:100%;padding:11px;margin:5px 0;border-radius:8px;font-size:15px}
-        input{border:1px solid #cbd5e1}
-        button{border:0;background:#2563eb;color:white;font-weight:bold;cursor:pointer}
-        button:hover{background:#1d4ed8}
-        .secondary{background:#475569}
-        #output{white-space:pre-wrap;overflow-wrap:anywhere;background:#0f172a;color:#d1fae5;padding:18px;border-radius:10px;min-height:100px}
-        small{color:#64748b}
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f4f7fb;
+            color: #172033;
+            font: 16px Arial, sans-serif;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 28px 7%;
+        }
+
+        header h1 { margin: 0 0 8px; }
+        header p { margin: 0; color: #cbd5e1; }
+
+        main {
+            max-width: 1150px;
+            margin: 24px auto;
+            padding: 0 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        section {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px #1725540c;
+        }
+
+        h2 { font-size: 19px; margin-top: 0; }
+
+        input, button {
+            width: 100%;
+            padding: 11px;
+            margin: 5px 0;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input { border: 1px solid #cbd5e1; }
+
+        button {
+            border: 0;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background .2s, transform .2s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: wait;
+            transform: none;
+        }
+
+        .secondary { background: #475569; }
+        .secondary:hover { background: #334155; }
+
+        .danger { background: #dc2626; }
+        .danger:hover { background: #b91c1c; }
+
+        #resultsSection { margin-bottom: 20px; }
+
+        #status {
+            padding: 12px 15px;
+            border-radius: 9px;
+            margin-bottom: 16px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-weight: bold;
+        }
+
+        #status.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        #status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        #status.loading {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        #results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 14px;
+        }
+
+        .student-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 17px;
+            background: #fff;
+        }
+
+        .student-card h3 {
+            margin: 0 0 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .student-card p {
+            margin: 7px 0;
+            color: #475569;
+            overflow-wrap: anywhere;
+        }
+
+        .student-id {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            border-radius: 20px;
+            padding: 4px 9px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .empty {
+            color: #64748b;
+            padding: 14px 0;
+        }
+
+        details {
+            margin-top: 18px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 14px;
+        }
+
+        summary {
+            cursor: pointer;
+            color: #475569;
+            font-weight: bold;
+        }
+
+        #output {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            background: #0f172a;
+            color: #d1fae5;
+            padding: 16px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+
+        small { color: #64748b; }
+
+        @media (max-width: 600px) {
+            header { padding: 24px 18px; }
+            main { margin: 16px auto; padding: 0 12px; }
+            section { padding: 17px; }
+        }
     </style>
 </head>
+
 <body>
 <header>
     <h1>Student Management System</h1>
@@ -31,6 +188,21 @@
 </header>
 
 <main>
+    <!-- Results are near the top for quick access -->
+    <section id="resultsSection">
+        <h2>Student Results</h2>
+        <div id="status" role="status" aria-live="polite">
+            Loading student records...
+        </div>
+
+        <div id="results"></div>
+
+        <details>
+            <summary>View raw API response</summary>
+            <pre id="output">Waiting for response...</pre>
+        </details>
+    </section>
+
     <div class="grid">
         <section>
             <h2>Add Student</h2>
@@ -46,7 +218,7 @@
             <input id="lookupId" type="number" placeholder="Student ID">
             <button onclick="byId()" class="secondary">Find Student</button>
             <button onclick="updateStudent()">Update Using Form Above</button>
-            <button onclick="deleteStudent()" class="secondary">Delete Student</button>
+            <button onclick="deleteStudent()" class="danger">Delete Student</button>
             <button onclick="loadStudents()">View All Students</button>
         </section>
 
@@ -54,10 +226,13 @@
             <h2>Search Students</h2>
             <input id="searchName" placeholder="Name contains...">
             <button onclick="searchName()">Search by Name</button>
+
             <input id="searchAge" type="number" placeholder="Exact age">
             <button onclick="searchAge()">Search by Age</button>
+
             <input id="searchEmail" type="email" placeholder="Exact email">
             <button onclick="searchEmail()">Find by Email</button>
+
             <input id="keyword" placeholder="Name keyword">
             <button onclick="keywordSearch()">Search Keyword</button>
         </section>
@@ -72,20 +247,87 @@
             <button onclick="countStudents()">Count Students</button>
         </section>
     </div>
-
-    <section style="margin-top:18px">
-        <h2>API Response</h2>
-        <small>Results and errors from the live backend appear below.</small>
-        <pre id="output">Loading student records...</pre>
-    </section>
 </main>
 
 <script>
     const api = "/students";
     const output = document.getElementById("output");
+    const statusBox = document.getElementById("status");
+    const results = document.getElementById("results");
+    const resultsSection = document.getElementById("resultsSection");
+
+    function showStatus(message, type = "") {
+        statusBox.textContent = message;
+        statusBox.className = type;
+    }
+
+    function showRawResponse(status, data) {
+        output.textContent = "HTTP " + status + "\n\n" +
+            (typeof data === "string"
+                ? data
+                : JSON.stringify(data, null, 2));
+    }
+
+    function showStudent(student) {
+        const card = document.createElement("article");
+        card.className = "student-card";
+
+        const badge = document.createElement("span");
+        badge.className = "student-id";
+        badge.textContent = "ID: " + student.id;
+
+        const name = document.createElement("h3");
+        name.textContent = student.name ?? "Unnamed student";
+
+        const age = document.createElement("p");
+        age.textContent = "Age: " + student.age;
+
+        const email = document.createElement("p");
+        email.textContent = "Email: " + student.email;
+
+        card.append(badge, name, age, email);
+        results.appendChild(card);
+    }
+
+    function renderResults(data) {
+        results.replaceChildren();
+
+        if (Array.isArray(data)) {
+            if (data.length === 0) {
+                results.innerHTML =
+                    '<p class="empty">No students found. Try another search.</p>';
+                return;
+            }
+
+            data.forEach(showStudent);
+            return;
+        }
+
+        if (data && typeof data === "object" &&
+            "id" in data && "name" in data) {
+            showStudent(data);
+            return;
+        }
+
+        if (typeof data === "number") {
+            const message = document.createElement("h3");
+            message.textContent = "Total students: " + data;
+            results.appendChild(message);
+            return;
+        }
+
+        if (typeof data === "string" && data !== "Success" && data) {
+            const message = document.createElement("p");
+            message.className = "empty";
+            message.textContent = data;
+            results.appendChild(message);
+        }
+    }
 
     async function request(path, options = {}) {
-        output.textContent = "Loading...";
+        showStatus("⏳ Processing your request...", "loading");
+        results.replaceChildren();
+
         try {
             const response = await fetch(api + path, {
                 ...options,
@@ -94,14 +336,47 @@
                     ...(options.headers || {})
                 }
             });
+
             const text = await response.text();
-            let result = text;
-            try { result = text ? JSON.parse(text) : "Success"; } catch {}
-            output.textContent = "HTTP " + response.status + "\n\n" +
-                (typeof result === "string" ? result :
-                    JSON.stringify(result, null, 2));
+            let data = text;
+
+            try {
+                data = text ? JSON.parse(text) : "Success";
+            } catch {}
+
+            showRawResponse(response.status, data);
+
+            if (!response.ok) {
+                const message =
+                    data && typeof data === "object"
+                        ? data.message || data.error || JSON.stringify(data)
+                        : data;
+
+                showStatus("❌ " + message, "error");
+                renderResults(data);
+            } else {
+                const method = options.method || "GET";
+                const message =
+                    method === "POST" ? "✅ Student added successfully!" :
+                        method === "PUT" ? "✅ Student updated successfully!" :
+                            method === "DELETE" ? "✅ Student deleted successfully!" :
+                                "✅ Request completed successfully!";
+
+                showStatus(message + "  (HTTP " + response.status + ")", "success");
+                renderResults(data);
+            }
+
+            resultsSection.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
         } catch (error) {
-            output.textContent = "Request failed: " + error.message;
+            showStatus("❌ Request failed: " + error.message, "error");
+            output.textContent = error.message;
+            resultsSection.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
         }
     }
 
@@ -114,81 +389,148 @@
         };
     }
 
-    function validForm(s) {
-        if (!s.id || !s.name || !s.age || !s.email) {
-            output.textContent = "Please fill in all four student fields.";
+    function validForm(student) {
+        if (!student.id || !student.name ||
+            !student.age || !student.email) {
+            showStatus("Please fill in all four student fields.", "error");
             return false;
         }
         return true;
     }
 
     function addStudent() {
-        const s = formStudent();
-        if (validForm(s))
-            request("", {method:"POST", body:JSON.stringify(s)});
+        const student = formStudent();
+        if (validForm(student)) {
+            request("", {
+                method: "POST",
+                body: JSON.stringify(student)
+            });
+        }
     }
 
     function byId() {
         const id = document.getElementById("lookupId").value;
-        if (id) request("/" + encodeURIComponent(id));
+
+        if (!id) {
+            showStatus("Enter a student ID first.", "error");
+            return;
+        }
+
+        request("/" + encodeURIComponent(id));
     }
 
     function updateStudent() {
         const id = document.getElementById("lookupId").value;
-        const s = formStudent();
+        const student = formStudent();
+
         if (!id) {
-            output.textContent = "Enter the ID to update.";
+            showStatus("Enter the ID of the student to update.", "error");
             return;
         }
-        if (validForm(s))
-            request("/" + encodeURIComponent(id),
-                {method:"PUT", body:JSON.stringify(s)});
+
+        if (validForm(student)) {
+            request("/" + encodeURIComponent(id), {
+                method: "PUT",
+                body: JSON.stringify(student)
+            });
+        }
     }
 
     function deleteStudent() {
         const id = document.getElementById("lookupId").value;
-        if (id && confirm("Delete student " + id + "?"))
-            request("/" + encodeURIComponent(id), {method:"DELETE"});
+
+        if (!id) {
+            showStatus("Enter a student ID first.", "error");
+            return;
+        }
+
+        if (confirm("Delete student " + id + "?")) {
+            request("/" + encodeURIComponent(id), {
+                method: "DELETE"
+            });
+        }
     }
 
-    function loadStudents() { request(""); }
+    function loadStudents() {
+        request("");
+    }
 
     function searchName() {
-        const v = document.getElementById("searchName").value.trim();
-        if (v) request("/search?name=" + encodeURIComponent(v));
+        const value = document.getElementById("searchName").value.trim();
+
+        if (!value) {
+            showStatus("Enter a name to search.", "error");
+            return;
+        }
+
+        request("/search?name=" + encodeURIComponent(value));
     }
 
     function searchAge() {
-        const v = document.getElementById("searchAge").value;
-        if (v !== "") request("/search/age?age=" + encodeURIComponent(v));
+        const value = document.getElementById("searchAge").value;
+
+        if (value === "") {
+            showStatus("Enter an age to search.", "error");
+            return;
+        }
+
+        request("/search/age?age=" + encodeURIComponent(value));
     }
 
     function searchEmail() {
-        const v = document.getElementById("searchEmail").value.trim();
-        if (v) request("/search/email?email=" + encodeURIComponent(v));
+        const value = document.getElementById("searchEmail").value.trim();
+
+        if (!value) {
+            showStatus("Enter an email to search.", "error");
+            return;
+        }
+
+        request("/search/email?email=" + encodeURIComponent(value));
     }
 
     function keywordSearch() {
-        const v = document.getElementById("keyword").value.trim();
-        if (v) request("/search/keyword?keyword=" + encodeURIComponent(v));
+        const value = document.getElementById("keyword").value.trim();
+
+        if (!value) {
+            showStatus("Enter a keyword to search.", "error");
+            return;
+        }
+
+        request("/search/keyword?keyword=" + encodeURIComponent(value));
     }
 
     function ageRange() {
         const min = document.getElementById("minAge").value;
         const max = document.getElementById("maxAge").value;
+
         if (min === "" || max === "" || Number(min) > Number(max)) {
-            output.textContent = "Enter a valid minimum and maximum age.";
+            showStatus("Enter a valid minimum and maximum age.", "error");
             return;
         }
+
         request("/search/age-range?min=" + encodeURIComponent(min) +
             "&max=" + encodeURIComponent(max));
     }
 
-    function sortAge() { request("/sort/age"); }
-    function sortName() { request("/sort/name"); }
-    function countStudents() { request("/count"); }
+    function sortAge() {
+        request("/sort/age");
+    }
 
-    loadStudents();
+    function sortName() {
+        request("/sort/name");
+    }
+
+    function countStudents() {
+        request("/count");
+    }
+
+    // Load records on initial page visit without forcing a scroll.
+    async function initialLoad() {
+        await request("");
+        window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    initialLoad();
 </script>
 </body>
 </html>
