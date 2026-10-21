@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,481 +6,690 @@
     <title>Student Management System</title>
 
     <style>
-        * { box-sizing: border-box; }
+        :root {
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --input: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #15803d;
+            --danger: #dc2626;
+            --shadow: 0 5px 18px rgba(15, 23, 42, 0.07);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
-            background: #f4f7fb;
-            color: #172033;
-            font: 16px Arial, sans-serif;
-            transition: background .25s ease, color .25s ease;
+            padding: 24px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.25s, color 0.25s;
         }
 
-        header {
-            background: #172554;
-            color: white;
-            padding: 28px 7%;
+        body.dark-mode {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --border: #334155;
+            --input: #0f172a;
+            --primary: #3b82f6;
+            --primary-hover: #60a5fa;
+            --success: #4ade80;
+            --danger: #f87171;
+            --shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
         }
 
-        header h1 { margin: 0 0 8px; }
-        header p { margin: 0; color: #cbd5e1; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-        /* Dark mode header layout */
         .header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 18px;
+            gap: 16px;
             flex-wrap: wrap;
+            margin-bottom: 24px;
         }
 
-        .theme-toggle {
-            width: auto;
-            min-width: 135px;
-            padding: 10px 16px;
-            background: #334155;
-            border: 1px solid #64748b;
+        h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
         }
 
-        .theme-toggle:hover { background: #475569; }
+        h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
 
-        main {
-            max-width: 1150px;
-            margin: 24px auto;
-            padding: 0 18px;
+        h3 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            line-height: 1.5;
+        }
+
+        .subtitle,
+        .muted {
+            color: var(--muted);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
         }
 
-        section {
-            background: white;
-            padding: 22px;
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
             border-radius: 14px;
-            box-shadow: 0 4px 18px #1725540c;
-            transition: background .25s ease, color .25s ease;
+            padding: 22px;
+            box-shadow: var(--shadow);
+            min-width: 0;
         }
 
-        h2 { font-size: 19px; margin-top: 0; }
+        .full-width {
+            grid-column: 1 / -1;
+        }
 
-        input, button {
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input,
+        select {
             width: 100%;
-            padding: 11px;
-            margin: 5px 0;
+            padding: 11px 12px;
+            border: 1px solid var(--border);
             border-radius: 8px;
-            font-size: 15px;
+            background: var(--input);
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
         }
 
-        input {
-            border: 1px solid #cbd5e1;
-            transition: background .25s ease, color .25s ease;
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
         }
 
         button {
-            border: 0;
-            background: #2563eb;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            background: var(--primary);
             color: white;
             font-weight: bold;
+            font-size: 13px;
             cursor: pointer;
-            transition: background .2s, transform .2s;
+            transition: opacity 0.2s, transform 0.2s;
         }
 
         button:hover {
-            background: #1d4ed8;
+            opacity: 0.9;
             transform: translateY(-1px);
         }
 
         button:disabled {
-            opacity: .6;
-            cursor: wait;
+            opacity: 0.55;
+            cursor: not-allowed;
             transform: none;
         }
 
-        .secondary { background: #475569; }
-        .secondary:hover { background: #334155; }
+        button.secondary {
+            background: #64748b;
+        }
 
-        .danger { background: #dc2626; }
-        .danger:hover { background: #b91c1c; }
+        button.danger {
+            background: #dc2626;
+        }
 
-        #resultsSection { margin-bottom: 20px; }
+        button.success {
+            background: #15803d;
+        }
 
-        #status {
-            padding: 12px 15px;
+        .status {
+            display: none;
+            padding: 13px 16px;
+            margin: 16px 0;
             border-radius: 9px;
-            margin-bottom: 16px;
-            background: #eff6ff;
-            color: #1d4ed8;
-            font-weight: bold;
+            overflow-wrap: anywhere;
         }
 
-        #status.success {
-            background: #dcfce7;
+        .status.success {
+            display: block;
             color: #166534;
+            background: #dcfce7;
+            border: 1px solid #86efac;
         }
 
-        #status.error {
-            background: #fee2e2;
+        .status.error {
+            display: block;
             color: #991b1b;
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
         }
 
-        #status.loading {
-            background: #fef3c7;
-            color: #92400e;
+        body.dark-mode .status.success {
+            background: #14532d;
+            color: #dcfce7;
+            border-color: #166534;
         }
 
-        #results {
+        body.dark-mode .status.error {
+            background: #7f1d1d;
+            color: #fee2e2;
+            border-color: #991b1b;
+        }
+
+        .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 14px;
         }
 
         .student-card {
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 17px;
-            background: #fff;
-            transition: background .25s ease, color .25s ease,
-            border-color .25s ease;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg);
+            overflow-wrap: anywhere;
         }
 
         .student-card h3 {
-            margin: 0 0 12px;
-            overflow-wrap: anywhere;
+            margin-top: 0;
         }
 
         .student-card p {
             margin: 7px 0;
-            color: #475569;
-            overflow-wrap: anywhere;
+            font-size: 14px;
         }
 
-        .student-id {
-            display: inline-block;
-            background: #dbeafe;
-            color: #1d4ed8;
-            border-radius: 20px;
-            padding: 4px 9px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .empty {
-            color: #64748b;
-            padding: 14px 0;
+        .empty-state {
+            color: var(--muted);
+            padding: 16px 0;
         }
 
         details {
             margin-top: 18px;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 14px;
         }
 
         summary {
             cursor: pointer;
-            color: #475569;
+            color: var(--muted);
             font-weight: bold;
         }
 
-        #output {
+        pre {
             white-space: pre-wrap;
             overflow-wrap: anywhere;
-            background: #0f172a;
-            color: #d1fae5;
-            padding: 16px;
-            border-radius: 10px;
-            overflow-x: auto;
+            padding: 15px;
+            border-radius: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            max-height: 350px;
+            overflow: auto;
+        }
+
+        .section-heading {
+            margin: 0 0 15px;
+        }
+
+        .hint {
+            color: var(--muted);
             font-size: 13px;
+            margin-top: 5px;
         }
 
-        small { color: #64748b; }
-
-        /* =========================
-           DARK MODE STYLES
-           ========================= */
-
-        body.dark-mode {
-            background: #0f172a;
-            color: #e2e8f0;
+        /* Toast notifications */
+        #toastContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: min(360px, calc(100vw - 32px));
+            pointer-events: none;
         }
 
-        body.dark-mode header {
-            background: #020617;
+        .toast {
+            padding: 14px 18px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 1.45;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            overflow-wrap: anywhere;
+            animation: toastIn 0.25s ease forwards;
         }
 
-        body.dark-mode section,
-        body.dark-mode .student-card {
-            background: #1e293b;
-            color: #e2e8f0;
-            border-color: #334155;
+        .toast.success {
+            background: #16a34a;
         }
 
-        body.dark-mode input {
-            background: #0f172a;
-            color: #f8fafc;
-            border-color: #475569;
+        .toast.error {
+            background: #dc2626;
         }
 
-        body.dark-mode input::placeholder {
-            color: #94a3b8;
+        .toast.info {
+            background: #2563eb;
         }
 
-        body.dark-mode .student-card p,
-        body.dark-mode .empty {
-            color: #cbd5e1;
+        .toast.removing {
+            animation: toastOut 0.25s ease forwards;
         }
 
-        body.dark-mode .student-id {
-            background: #1e3a8a;
-            color: #dbeafe;
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        body.dark-mode #status {
-            background: #1e293b;
-            color: #bfdbfe;
+        @keyframes toastOut {
+            to {
+                opacity: 0;
+                transform: translateX(30px);
+            }
         }
 
-        body.dark-mode #status.success {
-            background: #14532d;
-            color: #dcfce7;
-        }
-
-        body.dark-mode #status.error {
-            background: #7f1d1d;
-            color: #fee2e2;
-        }
-
-        body.dark-mode #status.loading {
-            background: #78350f;
-            color: #fef3c7;
-        }
-
-        body.dark-mode details {
-            border-color: #334155;
-        }
-
-        body.dark-mode summary {
-            color: #cbd5e1;
-        }
-
-        body.dark-mode #output {
-            background: #020617;
-            color: #d1fae5;
-        }
-
-        @media (max-width: 600px) {
-            header { padding: 24px 18px; }
-            main { margin: 16px auto; padding: 0 12px; }
-            section { padding: 17px; }
-
-            .header-row {
-                align-items: flex-start;
+        @media (max-width: 760px) {
+            body {
+                padding: 14px;
             }
 
-            .theme-toggle {
-                width: auto;
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .card {
+                padding: 17px;
+            }
+
+            #toastContainer {
+                top: 12px;
+                right: 12px;
+                width: calc(100vw - 24px);
             }
         }
     </style>
 </head>
 
 <body>
-<header>
-    <div class="header-row">
+<div id="toastContainer" aria-live="polite" aria-atomic="false"></div>
+
+<main class="container">
+    <header class="header-row">
         <div>
-            <h1>Student Management System</h1>
-            <p>Manage, search, update and organize student records.</p>
+            <h1>🎓 Student Management System</h1>
+            <p class="subtitle">
+                Manage students with your Spring Boot REST API.
+            </p>
         </div>
 
-        <button id="themeToggle"
-                class="theme-toggle"
-                onclick="toggleTheme()">
-            🌙 Dark Mode
-        </button>
-    </div>
-</header>
-
-<main>
-    <!-- Results are near the top for quick access -->
-    <section id="resultsSection">
-        <h2>Student Results</h2>
-        <div id="status" role="status" aria-live="polite">
-            Loading student records...
+        <div class="header-actions">
+            <button id="themeToggle"
+                    class="secondary"
+                    type="button"
+                    onclick="toggleTheme()">
+                🌙 Dark Mode
+            </button>
         </div>
+    </header>
 
-        <div id="results"></div>
+    <section class="card full-width">
+        <h2 class="section-heading">📊 Dashboard</h2>
+        <p class="muted">
+            Use the forms below to add, find, update, delete, search,
+            filter and sort students.
+        </p>
 
-        <details>
-            <summary>View raw API response</summary>
-            <pre id="output">Waiting for response...</pre>
-        </details>
+        <div class="button-row">
+            <button type="button" onclick="loadStudents()">
+                Load All Students
+            </button>
+            <button type="button" class="secondary" onclick="countStudents()">
+                Count Students
+            </button>
+        </div>
     </section>
 
-    <div class="grid">
-        <section>
-            <h2>Add Student</h2>
-            <input id="id" type="number" placeholder="Student ID">
-            <input id="name" placeholder="Full name">
-            <input id="age" type="number" placeholder="Age">
-            <input id="email" type="email" placeholder="Email">
-            <button onclick="addStudent()">Add Student</button>
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+
+    <section class="grid" style="margin-top: 20px;">
+
+        <!-- Add Student -->
+        <div class="card">
+            <h2>➕ Add Student</h2>
+
+            <form id="addStudentForm" onsubmit="addStudent(event)">
+                <div class="form-group">
+                    <label for="addId">Student ID</label>
+                    <input id="addId" type="number" min="1"
+                           placeholder="Enter student ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="addName">Full Name</label>
+                    <input id="addName" type="text" maxlength="100"
+                           placeholder="Enter student name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="addAge">Age</label>
+                    <input id="addAge" type="number" min="1" max="120"
+                           placeholder="Enter age" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="addEmail">Email</label>
+                    <input id="addEmail" type="email" maxlength="150"
+                           placeholder="student@example.com" required>
+                </div>
+
+                <button type="submit">Add Student</button>
+            </form>
+        </div>
+
+        <!-- Find, Update, Delete -->
+        <div class="card">
+            <h2>🔍 Find / Update / Delete</h2>
+
+            <div class="form-group">
+                <label for="manageId">Student ID</label>
+                <input id="manageId" type="number" min="1"
+                       placeholder="Enter student ID">
+            </div>
+
+            <div class="button-row">
+                <button type="button" onclick="byId()">
+                    Find Student
+                </button>
+                <button type="button" class="danger" onclick="deleteStudent()">
+                    Delete Student
+                </button>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 22px 0;">
+
+            <h3>Update Student</h3>
+
+            <form id="updateStudentForm" onsubmit="updateStudent(event)">
+                <div class="form-group">
+                    <label for="updateId">Student ID</label>
+                    <input id="updateId" type="number" min="1"
+                           placeholder="ID of student to update" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="updateName">New Name</label>
+                    <input id="updateName" type="text" maxlength="100"
+                           placeholder="Enter new name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="updateAge">New Age</label>
+                    <input id="updateAge" type="number" min="1" max="120"
+                           placeholder="Enter new age" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="updateEmail">New Email</label>
+                    <input id="updateEmail" type="email" maxlength="150"
+                           placeholder="Enter new email" required>
+                </div>
+
+                <button type="submit">Update Student</button>
+            </form>
+        </div>
+
+        <!-- Search -->
+        <div class="card">
+            <h2>🔎 Search Students</h2>
+
+            <div class="form-group">
+                <label for="searchNameInput">Search by Name</label>
+                <input id="searchNameInput" type="text"
+                       placeholder="Enter name or part of name">
+                <div class="button-row">
+                    <button type="button" onclick="searchName()">Search Name</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="searchAgeInput">Search by Exact Age</label>
+                <input id="searchAgeInput" type="number" min="1" max="120"
+                       placeholder="Enter age">
+                <div class="button-row">
+                    <button type="button" onclick="searchAge()">Search Age</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="searchEmailInput">Search by Email</label>
+                <input id="searchEmailInput" type="email"
+                       placeholder="Enter email">
+                <div class="button-row">
+                    <button type="button" onclick="searchEmail()">Search Email</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="keywordInput">Keyword Search</label>
+                <input id="keywordInput" type="text"
+                       placeholder="Search a name or email keyword">
+                <div class="button-row">
+                    <button type="button" onclick="keywordSearch()">Search Keyword</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Age Range and Sorting -->
+        <div class="card">
+            <h2>⚙️ Age Range & Sorting</h2>
+
+            <div class="form-group">
+                <label for="minAge">Minimum Age</label>
+                <input id="minAge" type="number" min="1" max="120"
+                       placeholder="Minimum age">
+            </div>
+
+            <div class="form-group">
+                <label for="maxAge">Maximum Age</label>
+                <input id="maxAge" type="number" min="1" max="120"
+                       placeholder="Maximum age">
+            </div>
+
+            <button type="button" onclick="ageRange()">Filter Age Range</button>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 22px 0;">
+
+            <h3>Sort Students</h3>
+            <div class="button-row">
+                <button type="button" onclick="sortAge()">Sort by Age</button>
+                <button type="button" onclick="sortName()">Sort by Name</button>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <section id="resultsSection" class="card full-width">
+            <h2>📋 Student Results</h2>
+            <p id="resultsHint" class="muted">
+                Click “Load All Students” to view your students.
+            </p>
+            <div id="results" class="results-grid">
+                <p class="empty-state">No results loaded yet.</p>
+            </div>
+
+            <details>
+                <summary>View Raw API Response (JSON)</summary>
+                <pre id="output">No API response yet.</pre>
+            </details>
         </section>
-
-        <section>
-            <h2>Find / Update / Delete</h2>
-            <input id="lookupId" type="number" placeholder="Student ID">
-            <button onclick="byId()" class="secondary">Find Student</button>
-            <button onclick="updateStudent()">Update Using Form Above</button>
-            <button onclick="deleteStudent()" class="danger">Delete Student</button>
-            <button onclick="loadStudents()">View All Students</button>
-        </section>
-
-        <section>
-            <h2>Search Students</h2>
-            <input id="searchName" placeholder="Name contains...">
-            <button onclick="searchName()">Search by Name</button>
-
-            <input id="searchAge" type="number" placeholder="Exact age">
-            <button onclick="searchAge()">Search by Age</button>
-
-            <input id="searchEmail" type="email" placeholder="Exact email">
-            <button onclick="searchEmail()">Find by Email</button>
-
-            <input id="keyword" placeholder="Name keyword">
-            <button onclick="keywordSearch()">Search Keyword</button>
-        </section>
-
-        <section>
-            <h2>Age Range & Sorting</h2>
-            <input id="minAge" type="number" placeholder="Minimum age">
-            <input id="maxAge" type="number" placeholder="Maximum age">
-            <button onclick="ageRange()">Filter Age Range</button>
-            <button onclick="sortAge()" class="secondary">Sort by Age</button>
-            <button onclick="sortName()" class="secondary">Sort by Name</button>
-            <button onclick="countStudents()">Count Students</button>
-        </section>
-    </div>
+    </section>
 </main>
 
 <script>
-    const api = "/students";
-    const output = document.getElementById("output");
-    const statusBox = document.getElementById("status");
-    const results = document.getElementById("results");
-    const resultsSection = document.getElementById("resultsSection");
+    const API = "/students";
 
-    // =========================
-    // PERSISTENT DARK MODE
-    // =========================
-
+    // Persistent dark mode
     function applyTheme(isDark) {
         document.body.classList.toggle("dark-mode", isDark);
 
-        const themeToggle = document.getElementById("themeToggle");
-
-        themeToggle.textContent = isDark
-            ? "☀️ Light Mode"
-            : "🌙 Dark Mode";
-
-        themeToggle.setAttribute(
-            "aria-pressed",
-            String(isDark)
-        );
+        const button = document.getElementById("themeToggle");
+        button.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
     }
 
     function toggleTheme() {
-        const isDark =
-            !document.body.classList.contains("dark-mode");
+        const isDark = !document.body.classList.contains("dark-mode");
 
-        localStorage.setItem(
-            "studentAppDarkMode",
-            String(isDark)
-        );
-
+        localStorage.setItem("studentAppDarkMode", String(isDark));
         applyTheme(isDark);
+
+        showToast(
+            isDark ? "Dark mode enabled." : "Light mode enabled.",
+            "info"
+        );
     }
 
-    // Restore the saved theme when the page opens.
-    const savedTheme = localStorage.getItem("studentAppDarkMode");
-    applyTheme(savedTheme === "true");
+    // Toast notifications
+    function showToast(message, type = "success") {
+        const container = document.getElementById("toastContainer");
+        const toast = document.createElement("div");
 
-    function showStatus(message, type = "") {
-        statusBox.textContent = message;
-        statusBox.className = type;
+        toast.className = "toast " + type;
+        toast.textContent = message;
+        toast.setAttribute("role", "status");
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add("removing");
+
+            setTimeout(() => {
+                toast.remove();
+            }, 250);
+        }, 3000);
     }
 
-    function showRawResponse(status, data) {
-        output.textContent = "HTTP " + status + "\n\n" +
-            (typeof data === "string"
+    function showStatus(message, type) {
+        const status = document.getElementById("status");
+
+        status.textContent = message;
+        status.className = "status " + type;
+    }
+
+    function showRawResponse(data) {
+        document.getElementById("output").textContent =
+            typeof data === "string"
                 ? data
-                : JSON.stringify(data, null, 2));
+                : JSON.stringify(data, null, 2);
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (char) {
+            const entities = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            };
+
+            return entities[char];
+        });
     }
 
     function showStudent(student) {
-        const card = document.createElement("article");
-        card.className = "student-card";
-
-        const badge = document.createElement("span");
-        badge.className = "student-id";
-        badge.textContent = "ID: " + student.id;
-
-        const name = document.createElement("h3");
-        name.textContent = student.name ?? "Unnamed student";
-
-        const age = document.createElement("p");
-        age.textContent = "Age: " + student.age;
-
-        const email = document.createElement("p");
-        email.textContent = "Email: " + student.email;
-
-        card.append(badge, name, age, email);
-        results.appendChild(card);
+        renderResults(student ? [student] : []);
     }
 
     function renderResults(data) {
-        results.replaceChildren();
+        const container = document.getElementById("results");
+        const hint = document.getElementById("resultsHint");
+
+        let students;
 
         if (Array.isArray(data)) {
-            if (data.length === 0) {
-                results.innerHTML =
-                    '<p class="empty">No students found. Try another search.</p>';
-                return;
-            }
+            students = data;
+        } else if (data && typeof data === "object") {
+            students = [data];
+        } else {
+            students = [];
+        }
 
-            data.forEach(showStudent);
+        hint.textContent = students.length +
+            (students.length === 1 ? " student found." : " students found.");
+
+        if (students.length === 0) {
+            container.innerHTML =
+                '<p class="empty-state">No students found.</p>';
             return;
         }
 
-        if (data && typeof data === "object" &&
-            "id" in data && "name" in data) {
-            showStudent(data);
-            return;
-        }
-
-        if (typeof data === "number") {
-            const message = document.createElement("h3");
-            message.textContent = "Total students: " + data;
-            results.appendChild(message);
-            return;
-        }
-
-        if (typeof data === "string" && data !== "Success" && data) {
-            const message = document.createElement("p");
-            message.className = "empty";
-            message.textContent = data;
-            results.appendChild(message);
-        }
+        container.innerHTML = students.map(student => `
+                <article class="student-card">
+                    <h3>${escapeHtml(student.name || "Unnamed Student")}</h3>
+                    <p><strong>ID:</strong> ${escapeHtml(student.id)}</p>
+                    <p><strong>Age:</strong> ${escapeHtml(student.age)}</p>
+                    <p><strong>Email:</strong> ${escapeHtml(student.email)}</p>
+                </article>
+            `).join("");
     }
 
-    async function request(path, options = {}) {
-        showStatus("⏳ Processing your request...", "loading");
-        results.replaceChildren();
+    async function request(url, options = {}, successMessage = "Request completed successfully!") {
+        showStatus("⏳ Loading...", "success");
 
         try {
-            const response = await fetch(api + path, {
+            const response = await fetch(url, {
                 ...options,
                 headers: {
                     "Content-Type": "application/json",
@@ -489,202 +697,299 @@
                 }
             });
 
-            const text = await response.text();
-            let data = text;
+            const responseText = await response.text();
+            let data = null;
 
-            try {
-                data = text ? JSON.parse(text) : "Success";
-            } catch {}
+            if (responseText) {
+                try {
+                    data = JSON.parse(responseText);
+                } catch {
+                    data = responseText;
+                }
+            }
 
-            showRawResponse(response.status, data);
+            showRawResponse(data ?? "(Empty response)");
 
             if (!response.ok) {
-                const message =
-                    data && typeof data === "object"
-                        ? data.message || data.error || JSON.stringify(data)
-                        : data;
+                let message = "Request failed with HTTP " + response.status;
+
+                if (data && typeof data === "object") {
+                    message = data.message || data.error || message;
+                } else if (typeof data === "string" && data.trim()) {
+                    message = data;
+                }
 
                 showStatus("❌ " + message, "error");
-                renderResults(data);
-            } else {
-                const method = options.method || "GET";
-                const message =
-                    method === "POST" ? "✅ Student added successfully!" :
-                        method === "PUT" ? "✅ Student updated successfully!" :
-                            method === "DELETE" ? "✅ Student deleted successfully!" :
-                                "✅ Request completed successfully!";
+                showToast("❌ " + message, "error");
+                return null;
+            }
 
-                showStatus(message + "  (HTTP " + response.status + ")", "success");
+            const message = successMessage;
+
+            showStatus(message + " (HTTP " + response.status + ")", "success");
+            showToast(message, "success");
+
+            if (response.status === 204 || data === null) {
+                renderResults([]);
+            } else {
                 renderResults(data);
             }
 
-            resultsSection.scrollIntoView({
+            document.getElementById("resultsSection").scrollIntoView({
                 behavior: "smooth",
                 block: "start"
             });
-        } catch (error) {
-            showStatus("❌ Request failed: " + error.message, "error");
-            output.textContent = error.message;
 
-            resultsSection.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
+            return data;
+        } catch (error) {
+            const message = "Request failed: " + error.message;
+
+            showStatus("❌ " + message, "error");
+            showToast(message, "error");
+            showRawResponse(message);
+
+            return null;
         }
     }
 
-    function formStudent() {
+    function formStudent(prefix) {
         return {
-            id: Number(document.getElementById("id").value),
-            name: document.getElementById("name").value.trim(),
-            age: Number(document.getElementById("age").value),
-            email: document.getElementById("email").value.trim()
+            id: Number(document.getElementById(prefix + "Id").value),
+            name: document.getElementById(prefix + "Name").value.trim(),
+            age: Number(document.getElementById(prefix + "Age").value),
+            email: document.getElementById(prefix + "Email").value.trim()
         };
     }
 
     function validForm(student) {
-        if (!student.id || !student.name ||
-            !student.age || !student.email) {
-            showStatus("Please fill in all four student fields.", "error");
+        if (!student.id || !student.name || !student.age || !student.email) {
+            const message = "Please fill in all four student fields.";
+            showStatus(message, "error");
+            showToast(message, "error");
             return false;
         }
+
+        if (student.age < 1 || student.age > 120) {
+            const message = "Age must be between 1 and 120.";
+            showStatus(message, "error");
+            showToast(message, "error");
+            return false;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(student.email)) {
+            const message = "Please enter a valid email address.";
+            showStatus(message, "error");
+            showToast(message, "error");
+            return false;
+        }
+
         return true;
     }
 
-    function addStudent() {
-        const student = formStudent();
+    async function addStudent(event) {
+        event.preventDefault();
 
-        if (validForm(student)) {
-            request("", {
+        const student = formStudent("add");
+
+        if (!validForm(student)) {
+            return;
+        }
+
+        const result = await request(
+            API,
+            {
                 method: "POST",
                 body: JSON.stringify(student)
-            });
+            },
+            "Student added successfully!"
+        );
+
+        if (result !== null) {
+            document.getElementById("addStudentForm").reset();
         }
+    }
+
+    function getManageId() {
+        const id = document.getElementById("manageId").value.trim();
+
+        if (!id || Number(id) <= 0) {
+            const message = "Please enter a valid student ID.";
+            showStatus(message, "error");
+            showToast(message, "error");
+            return null;
+        }
+
+        return encodeURIComponent(id);
     }
 
     function byId() {
-        const id = document.getElementById("lookupId").value;
+        const id = getManageId();
+        if (id === null) return;
 
-        if (!id) {
-            showStatus("Enter a student ID first.", "error");
-            return;
-        }
-
-        request("/" + encodeURIComponent(id));
+        request(API + "/" + id, {}, "Student retrieved successfully!");
     }
 
-    function updateStudent() {
-        const id = document.getElementById("lookupId").value;
-        const student = formStudent();
+    async function updateStudent(event) {
+        event.preventDefault();
 
-        if (!id) {
-            showStatus("Enter the ID of the student to update.", "error");
+        const idValue = document.getElementById("updateId").value.trim();
+
+        if (!idValue || Number(idValue) <= 0) {
+            const message = "Please enter a valid student ID.";
+            showStatus(message, "error");
+            showToast(message, "error");
             return;
         }
 
-        if (validForm(student)) {
-            request("/" + encodeURIComponent(id), {
+        const student = formStudent("update");
+
+        if (!validForm(student)) {
+            return;
+        }
+
+        const result = await request(
+            API + "/" + encodeURIComponent(idValue),
+            {
                 method: "PUT",
                 body: JSON.stringify(student)
-            });
+            },
+            "Student updated successfully!"
+        );
+
+        if (result !== null) {
+            document.getElementById("updateStudentForm").reset();
         }
     }
 
-    function deleteStudent() {
-        const id = document.getElementById("lookupId").value;
+    async function deleteStudent() {
+        const id = getManageId();
+        if (id === null) return;
 
-        if (!id) {
-            showStatus("Enter a student ID first.", "error");
+        if (!confirm("Are you sure you want to delete student ID " +
+            decodeURIComponent(id) + "?")) {
+            showToast("Delete cancelled.", "info");
             return;
         }
 
-        if (confirm("Delete student " + id + "?")) {
-            request("/" + encodeURIComponent(id), {
-                method: "DELETE"
-            });
-        }
+        await request(
+            API + "/" + id,
+            { method: "DELETE" },
+            "Student deleted successfully!"
+        );
     }
 
     function loadStudents() {
-        request("");
+        request(API, {}, "Students loaded successfully!");
     }
 
     function searchName() {
-        const value = document.getElementById("searchName").value.trim();
+        const name = document.getElementById("searchNameInput").value.trim();
 
-        if (!value) {
-            showStatus("Enter a name to search.", "error");
+        if (!name) {
+            const message = "Please enter a name to search.";
+            showStatus(message, "error");
+            showToast(message, "error");
             return;
         }
 
-        request("/search?name=" + encodeURIComponent(value));
+        request(
+            API + "/search?name=" + encodeURIComponent(name),
+            {},
+            "Name search completed!"
+        );
     }
 
     function searchAge() {
-        const value = document.getElementById("searchAge").value;
+        const age = document.getElementById("searchAgeInput").value.trim();
 
-        if (value === "") {
-            showStatus("Enter an age to search.", "error");
+        if (!age || Number(age) < 1 || Number(age) > 120) {
+            const message = "Enter an age between 1 and 120.";
+            showStatus(message, "error");
+            showToast(message, "error");
             return;
         }
 
-        request("/search/age?age=" + encodeURIComponent(value));
+        request(
+            API + "/search/age?age=" + encodeURIComponent(age),
+            {},
+            "Age search completed!"
+        );
     }
 
     function searchEmail() {
-        const value = document.getElementById("searchEmail").value.trim();
+        const email = document.getElementById("searchEmailInput").value.trim();
 
-        if (!value) {
-            showStatus("Enter an email to search.", "error");
+        if (!email) {
+            const message = "Please enter an email to search.";
+            showStatus(message, "error");
+            showToast(message, "error");
             return;
         }
 
-        request("/search/email?email=" + encodeURIComponent(value));
+        request(
+            API + "/search/email?email=" + encodeURIComponent(email),
+            {},
+            "Email search completed!"
+        );
     }
 
     function keywordSearch() {
-        const value = document.getElementById("keyword").value.trim();
+        const keyword = document.getElementById("keywordInput").value.trim();
 
-        if (!value) {
-            showStatus("Enter a keyword to search.", "error");
+        if (!keyword) {
+            const message = "Please enter a keyword.";
+            showStatus(message, "error");
+            showToast(message, "error");
             return;
         }
 
-        request("/search/keyword?keyword=" + encodeURIComponent(value));
+        request(
+            API + "/search/keyword?keyword=" + encodeURIComponent(keyword),
+            {},
+            "Keyword search completed!"
+        );
     }
 
     function ageRange() {
-        const min = document.getElementById("minAge").value;
-        const max = document.getElementById("maxAge").value;
+        const min = document.getElementById("minAge").value.trim();
+        const max = document.getElementById("maxAge").value.trim();
 
-        if (min === "" || max === "" || Number(min) > Number(max)) {
-            showStatus("Enter a valid minimum and maximum age.", "error");
+        if (min === "" || max === "" ||
+            Number(min) < 1 || Number(max) > 120 ||
+            Number(min) > Number(max)) {
+            const message = "Enter a valid age range (minimum ≤ maximum).";
+            showStatus(message, "error");
+            showToast(message, "error");
             return;
         }
 
-        request("/search/age-range?min=" + encodeURIComponent(min) +
-            "&max=" + encodeURIComponent(max));
+        request(
+            API + "/search/age-range?min=" + encodeURIComponent(min) +
+            "&max=" + encodeURIComponent(max),
+            {},
+            "Age range filter completed!"
+        );
     }
 
     function sortAge() {
-        request("/sort/age");
+        request(API + "/sort/age", {}, "Students sorted by age!");
     }
 
     function sortName() {
-        request("/sort/name");
+        request(API + "/sort/name", {}, "Students sorted by name!");
     }
 
     function countStudents() {
-        request("/count");
+        request(API + "/count", {}, "Student count retrieved!");
     }
 
-    // Load records on initial page visit without forcing a scroll.
-    async function initialLoad() {
-        await request("");
-        window.scrollTo({ top: 0, behavior: "instant" });
+    function initialLoad() {
+        const savedTheme = localStorage.getItem("studentAppDarkMode");
+        applyTheme(savedTheme === "true");
+        loadStudents();
     }
 
-    initialLoad();
+    document.addEventListener("DOMContentLoaded", initialLoad);
 </script>
 </body>
 </html>
