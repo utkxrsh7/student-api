@@ -333,6 +333,39 @@
             }
         }
 
+        /* Pagination */
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .pagination-controls[hidden] {
+            display: none;
+        }
+
+        .pagination-info {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .pagination-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-actions select {
+            width: auto;
+            min-width: 82px;
+        }
+
         @media (max-width: 760px) {
             body {
                 padding: 14px;
@@ -569,6 +602,21 @@
                 <p class="empty-state">No results loaded yet.</p>
             </div>
 
+            <div id="paginationControls" class="pagination-controls" hidden>
+                <span id="paginationInfo" class="pagination-info"></span>
+                <div class="pagination-actions">
+                    <label for="pageSize" style="margin: 0;">Per page</label>
+                    <select id="pageSize" onchange="changePageSize()" aria-label="Students per page">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                    <button id="prevPageButton" type="button" class="secondary" onclick="changePage(-1)">← Previous</button>
+                    <button id="nextPageButton" type="button" onclick="changePage(1)">Next →</button>
+                </div>
+            </div>
+
             <details>
                 <summary>View Raw API Response (JSON)</summary>
                 <pre id="output">No API response yet.</pre>
@@ -652,30 +700,49 @@
         renderResults(student ? [student] : []);
     }
 
+    // Pagination state for the currently displayed result set
+    let allStudents = [];
+    let currentPage = 1;
+    let pageSize = 10;
+
     function renderResults(data) {
-        const container = document.getElementById("results");
-        const hint = document.getElementById("resultsHint");
-
-        let students;
-
         if (Array.isArray(data)) {
-            students = data;
+            allStudents = data;
         } else if (data && typeof data === "object") {
-            students = [data];
+            allStudents = [data];
         } else {
-            students = [];
+            allStudents = [];
         }
 
-        hint.textContent = students.length +
-            (students.length === 1 ? " student found." : " students found.");
+        currentPage = 1;
+        renderCurrentPage();
+    }
 
-        if (students.length === 0) {
-            container.innerHTML =
-                '<p class="empty-state">No students found.</p>';
+    function renderCurrentPage() {
+        const container = document.getElementById("results");
+        const hint = document.getElementById("resultsHint");
+        const pagination = document.getElementById("paginationControls");
+        const paginationInfo = document.getElementById("paginationInfo");
+        const previousButton = document.getElementById("prevPageButton");
+        const nextButton = document.getElementById("nextPageButton");
+
+        const totalStudents = allStudents.length;
+        const totalPages = Math.max(1, Math.ceil(totalStudents / pageSize));
+        currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+
+        hint.textContent = totalStudents +
+            (totalStudents === 1 ? " student found." : " students found.");
+
+        if (totalStudents === 0) {
+            container.innerHTML = '<p class="empty-state">No students found.</p>';
+            pagination.hidden = true;
             return;
         }
 
-        container.innerHTML = students.map(student => `
+        const startIndex = (currentPage - 1) * pageSize;
+        const pageStudents = allStudents.slice(startIndex, startIndex + pageSize);
+
+        container.innerHTML = pageStudents.map(student => `
                 <article class="student-card">
                     <h3>${escapeHtml(student.name || "Unnamed Student")}</h3>
                     <p><strong>ID:</strong> ${escapeHtml(student.id)}</p>
@@ -683,6 +750,29 @@
                     <p><strong>Email:</strong> ${escapeHtml(student.email)}</p>
                 </article>
             `).join("");
+
+        pagination.hidden = totalStudents <= pageSize;
+        paginationInfo.textContent = `Page ${currentPage} of ${totalPages} · Showing ${startIndex + 1}–${Math.min(startIndex + pageSize, totalStudents)} of ${totalStudents}`;
+        previousButton.disabled = currentPage === 1;
+        nextButton.disabled = currentPage === totalPages;
+    }
+
+    function changePage(direction) {
+        const totalPages = Math.max(1, Math.ceil(allStudents.length / pageSize));
+        const nextPage = currentPage + direction;
+
+        if (nextPage < 1 || nextPage > totalPages) {
+            return;
+        }
+
+        currentPage = nextPage;
+        renderCurrentPage();
+    }
+
+    function changePageSize() {
+        pageSize = Number(document.getElementById("pageSize").value) || 10;
+        currentPage = 1;
+        renderCurrentPage();
     }
 
     async function request(url, options = {}, successMessage = "Request completed successfully!") {
