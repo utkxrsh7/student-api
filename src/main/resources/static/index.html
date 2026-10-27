@@ -819,7 +819,11 @@
             showStatus(message + " (HTTP " + response.status + ")", "success");
             showToast(message, "success");
 
-            if (response.status === 204 || data === null) {
+            if (url.endsWith("/count")) {
+                document.getElementById("resultsHint").textContent =
+                    "Total Students: " + data;
+                document.getElementById("results").innerHTML = "";
+            } else if (response.status === 204 || data === null) {
                 renderResults([]);
             } else {
                 renderResults(data);
